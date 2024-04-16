@@ -1,39 +1,39 @@
 #include<stdio.h>
+
 int tq=0;
 
 struct process{
-	int id,at,bt;
-	int ct,tat,tbt,wt;
+    int id,at,bt;
+    int ct,tat,tbt,wt;
 }p[10];
 
 void read(int n){
-	for(int i=0;i<n;i++)
-	{
-		printf("Enter id,arrival time, and burst time of process %d\n",i+1);
-		scanf("%d%d%d",&p[i].id,&p[i].at,&p[i].bt);
-	}
-	for(int i=0;i<n;i++)
-	{
-		p[i].tbt=p[i].bt;
-	}
+    for(int i=0;i<n;i++)
+    {
+        printf("Enter id, arrival time, and burst time of process %d\n",i+1);
+        scanf("%d%d%d",&p[i].id,&p[i].at,&p[i].bt);
+    }
+    for(int i=0;i<n;i++)
+    {
+        p[i].tbt=p[i].bt;
+    }
 }
 
 void sort(int n)
 {
-	for(int i=0;i<n;i++)
-	{
-		for(int j=0;j<n-i-1;j++)
-		{
-			if(p[j].at>p[j+1].at)
-			{
-				struct process p1=p[j];
-				p[j]=p[j+1];
-				p[j+1]=p1;
-			}
-		}
-	}
+    for(int i=0;i<n;i++)
+    {
+        for(int j=0;j<n-i-1;j++)
+        {
+            if(p[j].at>p[j+1].at)
+            {
+                struct process p1=p[j];
+                p[j]=p[j+1];
+                p[j+1]=p1;
+            }
+        }
+    }
 }
-
 
 void RRS(int n) {
     int x = 0, y = 0, i = 0;
@@ -49,20 +49,18 @@ void RRS(int n) {
                 p[i].bt = 0;
                 p[i].ct = x;
                 p[i].tat = p[i].ct - p[i].at;
-                p[i].wt = p[i].tat - p[i].tbt;
+                p[i].wt = (p[i].tat - p[i].tbt) > 0 ? (p[i].tat - p[i].tbt) : 0;
                 t_tat += p[i].tat;
                 t_wt += p[i].wt;
                 y++;
             }
         }
         
-     
         if (i == n - 1)
             i = 0;
         else
             i++;
         
-      
         int flag = 1;
         for (int j = 0; j < n; j++) {
             if (p[j].bt > 0) {
@@ -70,7 +68,6 @@ void RRS(int n) {
                 break;
             }
         }
-        
         
         if (flag)
             break;
@@ -80,19 +77,20 @@ void RRS(int n) {
     printf("Average TAT: %f\n", (t_tat / n));
 }
 
-
 int main()
 {
-	int n,t;
-	printf("Enter the number of processes: ");
-	scanf("%d",&n);
-	printf("Enter the time quantum: ");
-	scanf("%d",&t);
-	tq=t;
-	read(n);
-	RRS(n);
-	printf("ID\tAT\tBT\tTAT\tCT\tWT\n");
-	for(int i=0;i<n;i++){
-		printf("%d\t%d\t%d\t%d\t%d\t%d\n",p[i].id,p[i].at,p[i].tbt,p[i].tat,p[i].ct,p[i].wt);
-	}
-}	
+    int n,t;
+    printf("Enter the number of processes: ");
+    scanf("%d",&n);
+    printf("Enter the time quantum: ");
+    scanf("%d",&t);
+    tq=t;
+    read(n);
+    sort(n);
+    RRS(n);
+    printf("ID\tAT\tBT\tTAT\tCT\tWT\n");
+    for(int i=0;i<n;i++){
+        printf("%d\t%d\t%d\t%d\t%d\t%d\n",p[i].id,p[i].at,p[i].tbt,p[i].tat,p[i].ct,p[i].wt);
+    }
+    return 0;
+}
